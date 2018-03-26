@@ -12,6 +12,7 @@
     <modules>
         <module>http-async-client</module>
         <module>fast-json</module>
+        <module>guava</module>
     </modules>
 
     <properties>
