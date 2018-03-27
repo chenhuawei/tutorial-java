@@ -17,6 +17,23 @@ public class MySQLTimeZone {
     /**
      * 先以本地时区写入一条时间记录，然后分别以本地时区和UTC时区读取写入的时间
      * 再以UTC时区写入一条时间记录，然后分别以UTC时区和本地时区读取写入的时间
+     *
+     * 测试数据库时区
+     *  'system_time_zone', 'CST'
+     *  'time_zone', 'SYSTEM'
+     * 数据库服务器时区
+     *  /etc/localtime -> /usr/share/zoneinfo/Asia/Shanghai
+     * 本地(JVM)时区
+     *  Asia/Shanghai
+     *
+     * 测试结果
+     *  本地(JVM)时区       数据库值                JDBC返回值
+     *  Asia/Shanghai   2018-03-27 07:00:17     2018-03-27 15:00:17
+     *  UTC             2018-03-27 07:00:17     2018-03-27 07:00:17
+     *
+     *  UTC             2018-03-27 07:00:18     2018-03-27 07:00:18
+     *  Asia/Shanghai   2018-03-27 07:00:18     2018-03-27 15:00:18
+     *
      * @param cmd
      */
     public void run(CommandLine cmd) {
@@ -27,6 +44,7 @@ public class MySQLTimeZone {
         Config config = builder
                 .characterEncoding("utf8")
                 .useTimezone(true)
+                .serverTimezone("UTC")
                 .cacheDefaultTimezone(false)    //Driver默认会缓存时区信息导致切换时区没有生效，这里为了测试所以告诉Driver不要缓存
                 .build();
 
